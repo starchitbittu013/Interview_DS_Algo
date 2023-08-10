@@ -21,8 +21,7 @@ var equalPairs = function(grid) {
 
     for (let i = 0; i < grid.length; i++) {
         const rowString = grid[i].join('#');
-
-        console.log(rowString);
+        
         if (!rowFrequency.has(rowString)) {
             rowFrequency.set(rowString, 1);
         } else {
@@ -36,10 +35,8 @@ var equalPairs = function(grid) {
         let columnString = '';
         for (let i = 0; i < grid.length; i++) {            
             columnArray.push(grid[i][j]);                        
-        }
-        console.log(columnArray);
-        columnString = columnArray.join('#');
-        console.log(columnString);
+        }        
+        columnString = columnArray.join('#');        
 
         if (rowFrequency.has(columnString)) {
             count += rowFrequency.get(columnString);

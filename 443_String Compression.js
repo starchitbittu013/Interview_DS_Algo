@@ -19,8 +19,7 @@ const compress = function(chars) {
 
     for (let j = 1; j <= n; j++) {
         if (j < n && chars[j - 1] === chars[j]) {                        
-            count++; 
-            console.log(`chars: ${chars}, ${i}, ${j}, ${count}`);           
+            count++;                        
         } else {
             chars[i] = chars[j - 1];
             i++;
@@ -33,13 +32,8 @@ const compress = function(chars) {
             }
                   
             count = 1;         
-            console.log(`chars2: ${chars}, ${i}, ${j}, ${count}`);  
         }                
     }
-    console.log(count);
-    
-    console.log(`chars3: ${chars}, ${i}, ${j}, ${count}`); 
-    console.log(chars); 
     return i;
 };
 
