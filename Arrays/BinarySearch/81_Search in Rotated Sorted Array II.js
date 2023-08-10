@@ -42,7 +42,7 @@ function findPivot(nums, left, right) {
     while(left < right) {    
         while(left < right && nums[left] === nums[left + 1]) left++;
         while(left < right && nums[right] === nums[right - 1]) right--;
-        let mid = (left + right) / 2;
+        let mid = Math.floor((left + right) / 2);
 
         if(nums[mid] <= nums[right]) {
             right = mid;
@@ -55,7 +55,7 @@ function findPivot(nums, left, right) {
 
 function binarySearch(nums, left , right, target) {
     while(left <= right) {
-        let mid = (left + right) / 2;
+        let mid = Math.floor((left + right) / 2);
         if(nums[mid] === target) return true;
 
         if(nums[mid] < target) {
