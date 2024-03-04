@@ -54,10 +54,39 @@ var maxDepth = function(root) {
 };
 
 
+function height(root) {
+    let height = 0;
+    let queue = [];
+
+    queue.push(root);
+
+    // console.log(queue);
+
+    while(queue.length > 0) {
+        let length = queue.length;
+        for(let i = 0; i < length; i++) {
+            let temp = queue.shift();
+
+            if(temp.left !== null) {
+                queue.push(temp.left);
+            }
+            if(temp.right !== null) {
+                queue.push(temp.right);
+            }
+        }
+        height++;
+    }
+    return height;
+}
+
 const tree = new Tree();
 
 tree.root = new TreeNode(1);
-tree.root.left = null;
-tree.root.right = new TreeNode(2);
+tree.root.left = new TreeNode(2);
+tree.root.right = new TreeNode(3);
+tree.root.left.left = new TreeNode(4);
+tree.root.left.right = new TreeNode(5);
 
 console.log(maxDepth(tree.root));
+
+console.log(height(tree.root));

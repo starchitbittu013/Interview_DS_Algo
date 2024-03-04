@@ -11,3 +11,40 @@
 // Input: head = [2,1], x = 2
 // Output: [1,2]
 
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} x
+ * @return {ListNode}
+ */
+var partition = function(head, x) {
+    let smallHead = new ListNode(0);
+    let largeHead = new ListNode(0);
+
+    let smallPointer = smallHead;
+    let largePointer = largeHead;
+
+    while(head != null) {
+        if(head.val < x) {
+            smallPointer.next = head;
+            smallPointer = smallPointer.next;
+        } else {
+            largePointer.next = head;
+            largePointer = largePointer.next;
+        }
+        head = head.next;
+    }
+    smallPointer.next = largeHead.next;
+    largePointer.next = null;
+
+    return smallHead.next;
+};
+
+// TC: O(n)
+// SC: O(1)

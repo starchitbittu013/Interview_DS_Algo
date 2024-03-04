@@ -49,3 +49,44 @@ const helper = (m, n, row, col, memo) => {
     return memo[row][col];
 };
 
+// ########## Recursion + Memoization ###############
+
+/**
+ * @param {number} m
+ * @param {number} n
+ * @return {number}
+ */
+const uniquePaths = (m, n) => {
+    let memo = new Map();
+    function solve(i, j) {
+        let key = i + '-' + j;
+        if(i === m - 1 && j === n -1) return 1;
+
+        if(i >= m || j >= n || i < 0 || j < 0) return 0;
+
+        if(memo.has(key)) return memo.get(key);
+
+        let right = solve(i, j + 1, memo);
+        let down = solve(i + 1, j, memo);
+
+        let result = right + down;
+        memo.set(key, result);
+
+        return result;
+    }
+    return solve(0, 0);
+};
+
+// ########## Bottom up ###############
+
+var uniquePaths = function(m, n) {
+    let dp = new Array(m).fill(0).map(() => new Array(n));
+    
+    for(let row = m - 1; row >= 0; row--) {
+        for(let col = n - 1; col >= 0; col--) {
+            if(row === (m - 1) || col === (n - 1)) dp[row][col] = 1;
+            else dp[row][col] = dp[row + 1][col] + dp[row][col + 1];
+        }
+    }
+    return dp[0][0];
+};
