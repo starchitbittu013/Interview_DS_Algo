@@ -15,25 +15,29 @@
 // Input: strs = ["dog","racecar","car"]
 // Output: ""
 // Explanation: There is no common prefix among the input strings.
+ 
 
-/**
- * @param {string[]} strs
- * @return {string}
- */
+// Constraints:
+
+// 1 <= strs.length <= 200
+// 0 <= strs[i].length <= 200
+// strs[i] consists of only lowercase English letters if it is non-empty.
+
+
 var longestCommonPrefix = function(strs) {
-    let n = strs.length;
-    let m = strs[0].length;
+    let n = strs.length; 
+    let result = '';   
 
-    while(m > 0) {
-        for(let i = 0; i < n; i++) {
-            if(strs[0].substring(0, m) !== strs[i].substring(0, m)) {
-                break;
+    let str = strs[0];
+    let k = 0;
+
+    for(let k = 0; k < str.length; k++) {
+        for(let j = 1; j < n; j++) {
+            if(str[k] !== strs[j][k]) {
+                return result;
             }
-            if(i === n - 1) return strs[0].substring(0, m);
         }
-        m--;            
+        result += str[k];
     }
-    return '';
+    return result;
 };
-
-console.log(longestCommonPrefix(["flower","flow","flight"]));
