@@ -7,7 +7,7 @@ Each topic has its own directory, which is further divided into difficulties con
 <ul>
     <li>Question: [Problem Statement]</li>
     <li>Approach: [Brief explanation of the approach used]</li>
-    <li>Code: [C++ code of the following approach]</li>
+    <li>Code: [C++, JavaScript, Python code of the following approach]</li>
     <li>Time Complexity: [Time complexity analysis]</li>
     <li>Space Complexity: [Space complexity analysis]</li>
 </ul>
