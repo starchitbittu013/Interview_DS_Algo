@@ -1,0 +1,55 @@
+"""QUESTION:
+
+Given a binary tree, find the preorder traversal of the tree without using extra space.
+
+APPROACH:
+
+We can achieve a non-recursive preorder traversal without using extra space by modifying the binary tree itself.
+
+1. We start with the current node as the root.
+2. While the current node is not None, we do the following:
+   - If the current node does not have a left child, we visit the current node and move to its right child.
+   - If the current node has a left child, we find the rightmost node of its left subtree.
+     - If the rightmost node does not have a right child, we visit the current node, make the right child of the rightmost node point to the current node, and move to the left child.
+     - If the rightmost node already has a right child (which points back to the current node), we reset the right child to None, visit the current node, and move to its right child.
+3. We repeat this process until we have visited all the nodes in the tree.
+4. Finally, we return the result list containing the preorder traversal.
+
+COMPLEXITY ANALYSIS:
+
+Let n be the number of nodes in the binary tree.
+- Time Complexity: The time complexity of this approach is O(n) since we visit each node once.
+- Space Complexity: The space complexity is O(1) since we don't use any extra space.
+
+CODE:
+"""
+from typing import Optional, List
+
+class Node:
+    def __init__(self, data=0, left=None, right=None):
+        self.data = data
+        self.left = left
+        self.right = right
+
+def preOrder(root: Optional[Node]) -> List[int]:
+    ans = []
+    curr = root
+
+    while curr:
+        if not curr.left:
+            ans.append(curr.data)
+            curr = curr.right
+        else:
+            rightmost = curr.left
+            while rightmost.right and rightmost.right != curr:
+                rightmost = rightmost.right
+
+            if not rightmost.right:
+                ans.append(curr.data)
+                rightmost.right = curr
+                curr = curr.left
+            else:
+                rightmost.right = None
+                curr = curr.right
+
+    return ans
