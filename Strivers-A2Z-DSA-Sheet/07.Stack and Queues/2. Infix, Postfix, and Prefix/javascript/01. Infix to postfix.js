@@ -20,19 +20,27 @@ APPROACH:
 - If the character is a closing parenthesis ')', we pop elements from the stack and append them to the output string until we encounter an opening parenthesis. We also discard the opening parenthesis from the stack.
 - If the character is an operator, we compare its precedence with the top element of the stack. If the top element has higher precedence, we pop it and append it to the output string. We repeat this process until we find an operator with lower precedence or an opening parenthesis. Then we push the current operator onto the stack.
 - After iterating through all characters, we pop any remaining elements from the stack and append them to the output string.
+// ✅ IMP: 👉 ^ is right-associative, not left-associative. When the operator is ^, you should NOT pop operators with equal precedence — only higher precedence.
 
 CODE:
 */
 
+// Function to return precedence of operators
+// ✅ IMP: 👉 ^ is right-associative, not left-associative. When the operator is ^, you should NOT pop operators with equal precedence — only higher precedence.
+
+function precedence(c) {
+    if (c === '^')  // Exponent operator has highest precedence
+        return 3;
+    else if (c === '/' || c === '*')  // Multiplication and division have higher precedence than addition
+        return 2;
+    else if (c === '+' || c === '-')  // Addition and subtraction have lowest precedence
+        return 1;
+    else
+        return -1;
+}
+
 function infixToPostfix(s) {
     let ans = "";
-    const precedence = {
-        '^': 3,
-        '*': 2,
-        '/': 2,
-        '+': 1,
-        '-': 1
-    };
     
     const st = [];
     
@@ -49,7 +57,10 @@ function infixToPostfix(s) {
             }
             st.pop();
         } else {
-            while (st.length > 0 && st[st.length - 1] !== '(' && precedence[st[st.length - 1]] >= precedence[ch]) {
+            while (st.length > 0 && st[st.length - 1] !== '(' 
+                && (precedence(st[st.length - 1]) > precedence(ch) 
+                || precedence(st[st.length - 1]) === precedence(ch)
+                && ch !== '^')) {                
                 ans += st.pop();
             }
             st.push(ch);
@@ -62,6 +73,14 @@ function infixToPostfix(s) {
     
     return ans;
 }
+
+//let exp = "(p+q)*(m-n)";  // Infix expression
+//console.log(`Infix expression: ${exp}`);
+//console.log(infixToPostfix(exp));  // Convert the infix expression to postfix
+
+console.log(infixToPostfix("a*(b+c)/d"));
+console.log(infixToPostfix("h^m^q^(7-4)"));
+// ✅ IMP: 👉 ^ is right-associative, not left-associative. When the operator is ^, you should NOT pop operators with equal precedence — only higher precedence.
 
 /*
 COMPLEXITY ANALYSIS:
@@ -87,7 +106,7 @@ function prec(c) {
 }
 
 // Function to convert infix expression to postfix expression
-function infixToPostfix(s) {
+function infixToPostfix1(s) {
     let stack = [];  // Stack to hold operators and parentheses
     let result = "";  // String to hold the resulting postfix expression
 
@@ -109,7 +128,10 @@ function infixToPostfix(s) {
         }
         // If an operator is scanned
         else {
-            while (stack.length > 0 && prec(c) <= prec(stack[stack.length - 1])) {
+            while (stack.length > 0 
+                && (prec(stack[stack.length - 1]) > prec(c) 
+                || prec(stack[stack.length - 1]) === prec(c)
+                && c !== '^')) {                
                 result += stack.pop();
             }
             stack.push(c);  // Push the current operator to the stack
@@ -128,7 +150,8 @@ function infixToPostfix(s) {
 function main() {
     let exp = "(p+q)*(m-n)";  // Infix expression
     console.log(`Infix expression: ${exp}`);
-    infixToPostfix(exp);  // Convert the infix expression to postfix
+    infixToPostfix1(exp);  // Convert the infix expression to postfix
+    infixToPostfix1("h^m^q^(7-4)");
 }
 
 // Call the main function

@@ -59,3 +59,48 @@ function findCeil(root, input) {
     solve(root, input, ansRef);
     return ansRef.val;
 }
+
+
+// class Node {
+//     constructor(data, left = null, right = null) {
+//         this.data = data;
+//         this.left = left;
+//         this.right = right;
+//     }
+// }
+
+// function findCeil(root, x) {
+//     let ceil = -1;
+//     let current = root;
+
+//     while (current) {
+//         if (current.data === x) {
+//             return x; // exact match = ceil
+//         }
+
+//         if (current.data > x) {
+//             ceil = current.data;   // possible ceil
+//             current = current.left;
+//         } else {
+//             current = current.right;
+//         }
+//     }
+
+//     return ceil;
+// }
+
+
+// Recursive Way
+
+// function findCeil(root, x) {
+//     if (!root) return -1;
+
+//     if (root.data === x) return x;
+
+//     if (root.data < x) {
+//         return findCeil(root.right, x);
+//     }
+
+//     const leftCeil = findCeil(root.left, x);
+//     return leftCeil >= x ? leftCeil : root.data;
+// }
