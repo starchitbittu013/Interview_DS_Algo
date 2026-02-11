@@ -47,7 +47,8 @@ function infixToPostfix(s) {
     for (let i = 0; i < s.length; i++) {
         const ch = s[i];
         
-        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) {
+        // if (/[a-zA-Z0-9]/.test(ch))
+        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) { 
             ans += ch;
         } else if (ch === '(') {
             st.push(ch);

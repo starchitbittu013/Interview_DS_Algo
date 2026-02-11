@@ -47,6 +47,7 @@ function postToInfix(exp) {
 COMPLEXITY ANALYSIS:
 - The time complexity of the postToInfix function is O(N), where N is the length of the input string.
 - We iterate through each character once, and the operations performed inside the loop are all constant time.
+- String concatenation can be considered O(1) in JavaScript due to string immutability and optimization, but in general, it can be O(M) where M is the length of the resulting string. However, since we are only concatenating a few characters at a time, we can treat it as O(1) for simplicity.
 - The space complexity is O(N) as we use a stack to store operands.
 */
 

@@ -48,7 +48,19 @@ def infix_to_prefix(s: str) -> str:
                 ans += st.pop()
             st.pop()  # Pop the closing parenthesis ')'
         else:
-            while st and st[-1] != ')' and precedence.get(st[-1], 0) >= precedence.get(ch, 0):
+            # ✅ IMP: 👉 ^ is right-associative, not left-associative.
+            # When the operator is ^, do NOT pop operators with equal precedence — only higher precedence.
+            while (
+                st
+                and st[-1] != ')'
+                and (
+                    precedence.get(st[-1], 0) > precedence.get(ch, 0)
+                    or (
+                        precedence.get(st[-1], 0) == precedence.get(ch, 0)
+                        and ch != '^'
+                    )
+                )
+            ):
                 ans += st.pop()
             st.append(ch)
 

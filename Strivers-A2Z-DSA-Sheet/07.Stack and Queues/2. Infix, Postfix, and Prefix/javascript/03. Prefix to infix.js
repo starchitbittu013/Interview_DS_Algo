@@ -43,6 +43,7 @@ function preToInfix(preExp) {
 /*
 COMPLEXITY ANALYSIS:
 - The time complexity of the preToInfix function is O(N), where N is the length of the input string.
+- String concatenation in JavaScript can be O(N) in the worst case, but since we are only concatenating a few characters (two operands and one operator), it can be considered O(1) for each operation. Thus, the overall time complexity remains O(N). 
 - We iterate through each character once, and the operations performed inside the loop are all constant time.
 - The space complexity is O(N) as we use a stack to store operands.
 */

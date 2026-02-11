@@ -22,64 +22,228 @@ Explanation:
 After converting the infix expression into prefix expression, the resultant expression will be *-A/BC-/AKL.
 
 APPROACH:
-- We can use a stack to convert the infix expression to postfix.
-- We iterate through each character of the input string from right to left.
-- If the character is an alphanumeric character, we append it to the output string.
-- If the character is an closing parenthesis '(', we push it onto the stack.
-- If the character is a opening parenthesis ')', we pop operators from the stack and append them to the output string until we encounter an closing parenthesis '('.
-- If the character is an operator, we compare its precedence with the top of the stack and pop operators with higher or equal precedence and append them to the output string. Then we push the current operator onto the stack.
-- After iterating through all characters, we pop any remaining operators from the stack and append them to the output string.
 
+1. Reverse the infix expression.
+2. Swap '(' with ')' and vice versa.
+3. Convert the modified expression to postfix.
+4. Reverse the postfix expression to get the prefix expression.
+ 
 CODE:
 */
 
-function infixToPrefix(s) {
-    let ans = "";
-    const precedence = {
-        '^': 3,
-        '*': 2,
-        '/': 2,
-        '+': 1,
-        '-': 1
-    };
+// Function to return precedence of operators
+function getPriority(C) {
+    if (C === '^')
+        return 3;
+    else if (C === '*' || C === '/')
+        return 2;
+    else if (C === '+' || C === '-')
+        return 1;
+    return 0;
+}
 
-    const st = [];
+// manual string reverse
+function reverseString(str) {
+    let res = "";
+    for (let i = str.length - 1; i >= 0; i--) {
+        res += str[i];
+    }
+    return res;
+}
 
-    for (let i = s.length - 1; i >= 0; i--) {
-        const ch = s[i];
-        
-        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) {
-            ans += ch;
-        } else if (ch === ')') {
-            st.push(ch);
-        } else if (ch === '(') {
-            while (st.length > 0 && st[st.length - 1] !== ')') {
-                ans += st.pop();
+// manual bracket swap
+function swapBrackets(str) {
+    let res = "";
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] === '(')
+            res += ')';
+        else if (str[i] === ')')
+            res += '(';
+        else
+            res += str[i];
+    }
+    return res;
+}
+
+// check operand manually
+function isOperand(c) {
+    if (c >= 'a' && c <= 'z') return true;
+    if (c >= 'A' && c <= 'Z') return true;
+    if (c >= '0' && c <= '9') return true;
+    return false;
+}
+
+// Function to convert infix expression to postfix expression
+function infixToPostfix(infix) {
+    let stack = [];
+    let result = "";
+
+    for (let i = 0; i < infix.length; i++) {
+
+        let c = infix[i];
+
+        if (isOperand(c)) {
+            result += c;
+        }
+
+        else if (c === '(') {
+            stack.push(c);
+        }
+
+        else if (c === ')') {
+            while (stack.length > 0 && stack[stack.length - 1] !== '(') {
+                result += stack.pop();
             }
-            st.pop(); // Pop the closing parenthesis ')'
-        } else {
-            while (st.length > 0 && st[st.length - 1] !== ')' && precedence[st[st.length - 1]] >= precedence[ch]) {
-                ans += st.pop();
+            stack.pop();
+        }
+
+        else {
+
+            while (
+                stack.length > 0 &&
+                stack[stack.length - 1] !== '(' &&
+                (
+                    getPriority(stack[stack.length - 1]) > getPriority(c) ||
+                    (
+                        getPriority(stack[stack.length - 1]) === getPriority(c) &&
+                        c !== '^'
+                    )
+                )
+            ) {
+                result += stack.pop();
             }
-            st.push(ch);
+
+            stack.push(c);
         }
     }
 
-    while (st.length > 0) {
-        ans += st.pop();
+    // pop remaining operators (safety flush)
+    while (stack.length > 0) {
+        result += stack.pop();
     }
 
-    return ans.split('').reverse().join('');
+    return result;
 }
 
+// Function to convert infix expression to prefix expression
+function infixToPrefix(infix) {
+
+    let reversed = reverseString(infix);
+
+    let swapped = swapBrackets(reversed);
+
+    let postfix = infixToPostfix(swapped);
+
+    let prefix = reverseString(postfix);
+
+    return prefix;
+}
+
+// Main function
+function main() {
+
+    let exp1 = "(p+q)*(c-d)";
+    let exp2 = "a+b*(c^d-e)^(f+g*h)-i"; 
+    let exp3 = "a^b^c";
+
+    console.log("Infix:", exp1);
+    console.log("Prefix:", infixToPrefix(exp1));
+
+    console.log("\nInfix:", exp2);
+    console.log("Prefix:", infixToPrefix(exp2));
+
+    console.log("\nInfix:", exp3);
+    console.log("Prefix:", infixToPrefix(exp3));
+}
+
+main();
+
+
+
+// Time Complexity: O(N), where N is the length of the infix expression.
+// Space Complexity: O(N), for the stack and the result string.
+
+
 /*
-COMPLEXITY ANALYSIS:
-- The time complexity of the infixToPrefix function is O(N), where N is the length of the input string.
-- We iterate through each character once, and the operations performed inside the loop are all constant time.
-- The space complexity is O(N) as we use a stack to store operators.
-*/
 
-// Export for module usage
-module.exports = { infixToPrefix };
+class Solution {
 
-console.log(infixToPrefix("x+y*z/w+u"));
+    precedence(c) {
+        if (c === '^') return 3;
+        if (c === '*' || c === '/') return 2;
+        if (c === '+' || c === '-') return 1;
+        return -1;
+    }
+
+    isOperand(ch) {
+        return (
+            (ch >= 'a' && ch <= 'z') ||
+            (ch >= 'A' && ch <= 'Z') ||
+            (ch >= '0' && ch <= '9')
+        );
+    }
+
+    infixToPrefix(s) {
+
+        // reverse + swap brackets
+        let rev = "";
+        for (let i = s.length - 1; i >= 0; i--) {
+            if (s[i] === '(') rev += ')';
+            else if (s[i] === ')') rev += '(';
+            else rev += s[i];
+        }
+
+        let st = [];
+        let postfix = "";
+
+        for (let i = 0; i < rev.length; i++) {
+
+            let ch = rev[i];
+
+            if (this.isOperand(ch)) {
+                postfix += ch;
+            }
+
+            else if (ch === '(') {
+                st.push(ch);
+            }
+
+            else if (ch === ')') {
+                while (st.length && st[st.length - 1] !== '(')
+                    postfix += st.pop();
+                st.pop();
+            }
+
+            else {
+
+                while (
+                    st.length &&
+                    (
+                        this.precedence(st[st.length - 1]) > this.precedence(ch) ||
+                        (
+                            this.precedence(st[st.length - 1]) === this.precedence(ch) &&
+                            ch === '^'   // 🔥 key fix
+                        )
+                    )
+                ) {
+                    postfix += st.pop();
+                }
+
+                st.push(ch);
+            }
+        }
+
+        while (st.length)
+            postfix += st.pop();
+
+        // manual reverse (avoid split/join)
+        let prefix = "";
+        for (let i = postfix.length - 1; i >= 0; i--) {
+            prefix += postfix[i];
+        }
+
+        return prefix;
+    }
+}
+
+**/
