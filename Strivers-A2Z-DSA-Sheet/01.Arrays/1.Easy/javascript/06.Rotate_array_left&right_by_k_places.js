@@ -37,6 +37,8 @@ To rotate the array k places to left follow below steps
 
 function reverse(arr, start, end) {
     while (start < end) {
+        // Swap arr[start] and arr[end]
+        // Using destructuring assignment to swap values
         [arr[start], arr[end]] = [arr[end], arr[start]];
         start++;
         end--;
@@ -46,9 +48,16 @@ function reverse(arr, start, end) {
 // RIGHT ROATATE:-
 function rightRotate(arr, n, k) {
     k = k % n; // to keep k within the range
+    // First reverse first n-k elements and then reverse last k elements and then reverse the entire array
     reverse(arr, 0, n - k - 1);
     reverse(arr, n - k, n - 1);
     reverse(arr, 0, n - 1);
+
+    // OR we can also do like this
+    // First reverse the entire array and then reverse first k elements and then reverse last n-k elements
+    // reverse(arr, 0, n - 1);    
+    // reverse(arr, 0, k - 1);
+    // reverse(arr, k, n - 1);
 }
 
 // LEFT ROATATE:-
@@ -57,6 +66,11 @@ function leftRotate(arr, n, k) {
     reverse(arr, 0, k - 1);
     reverse(arr, k, n - 1);
     reverse(arr, 0, n - 1);
+
+    // OR we can also do like this
+    // reverse(arr, 0, n - 1);
+    // reverse(arr, 0, n - k - 1);
+    // reverse(arr, n - k, n - 1);
 }
 
 // TIME COMPLEXITY = O(N)

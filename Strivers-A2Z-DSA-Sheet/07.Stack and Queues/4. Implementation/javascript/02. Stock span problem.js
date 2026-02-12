@@ -55,3 +55,21 @@ COMPLEXITY ANALYSIS:
 
 // Export for module usage
 module.exports = { StockSpanner };
+
+
+class StockSpanner {
+    constructor() {
+        this.stack = [];
+    }
+
+    next(price) {
+        let span = 1;
+
+        while(this.stack.length > 0 && this.stack[this.stack.length - 1][0] <= price) {
+            const popSpan = this.stack.pop()[1];
+            span += popSpan;
+        }
+        this.stack.push([price, span]);
+        return span;
+    }
+}
