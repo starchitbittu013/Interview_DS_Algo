@@ -54,3 +54,113 @@ COMPLEXITY ANALYSIS:
 - Space complexity: O(L), as we store the unique letters in the set ltrs.
 */
 
+// ==================== BRUTE FORCE APPROACH ====================
+
+class Solution {
+    // Function to return the maximum length of substring where we can
+    // replace at most k characters to make all characters the same
+    characterReplacement(s, k) {
+
+        // Variable to store the max length found
+        let maxLength = 0;
+
+        // Outer loop to start from every index
+        for (let i = 0; i < s.length; i++) {
+
+            // Frequency array for characters A-Z
+            const freq = new Array(26).fill(0);
+
+            // Track the highest frequency character in the window
+            let maxFreq = 0;
+
+            // Inner loop to expand the window
+            for (let j = i; j < s.length; j++) {
+
+                // Update frequency of current character
+                freq[s.charCodeAt(j) - 65]++;
+
+                // Update the max frequency character seen so far
+                maxFreq = Math.max(maxFreq, freq[s.charCodeAt(j) - 65]);
+
+                // Calculate current window size
+                const windowSize = j - i + 1;
+
+                // Calculate how many characters need replacement
+                const replace = windowSize - maxFreq;
+
+                // If replacements within limit, update result
+                if (replace <= k) {
+                    maxLength = Math.max(maxLength, windowSize);
+                }
+            }
+        }
+
+        return maxLength;
+    }
+}
+
+// Driver code
+const sol = new Solution();
+const s = "AABABBA";
+const k = 1;
+console.log(sol.characterReplacement(s, k));
+
+// Time Complexity: O(N^2)
+// Space Complexity: O(1)
+
+
+// ==================== OPTIMIZED APPROACH ====================
+
+class Solution {
+    // Function to return the length of the longest substring that can be made of repeating characters
+    // by replacing at most k characters
+    characterReplacement(s, k) {
+        // Frequency array for A-Z
+        const freq = new Array(26).fill(0);
+
+        // Left and right pointers of sliding window
+        let left = 0, right = 0;
+
+        // Tracks the count of the most frequent character in current window
+        let maxCount = 0;
+
+        // Stores the maximum length of valid window
+        let maxLength = 0;
+
+        // Iterate through the string with right pointer
+        while (right < s.length) {
+
+            // Increment the frequency of current character
+            freq[s.charCodeAt(right) - 65]++;
+
+            // Update maxCount with the max frequency seen so far
+            maxCount = Math.max(maxCount, freq[s.charCodeAt(right) - 65]);
+
+            // If the current window needs more than k replacements, move left
+            while ((right - left + 1) - maxCount > k) {
+                freq[s.charCodeAt(left) - 65]--;
+                left++;
+            }
+
+            // Update the maximum window length
+            maxLength = Math.max(maxLength, right - left + 1);
+
+            // Move right pointer forward
+            right++;
+        }
+
+        // Return the maximum valid window length
+        return maxLength;
+    }
+}
+
+// Driver code
+const sol = new Solution();
+const s = "AABABBA";
+const k = 1;
+// Output : 4
+console.log(sol.characterReplacement(s, k));
+
+// Time Complexity: O(N)
+// Space Complexity: O(1)
+

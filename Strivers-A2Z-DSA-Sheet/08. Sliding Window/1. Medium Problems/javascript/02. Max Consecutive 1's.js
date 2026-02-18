@@ -45,3 +45,30 @@ COMPLEXITY ANALYSIS:
 - Space complexity: O(1), as we are using a constant amount of additional space to store variables.
 */
 
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var longestOnes = function(nums, k) {
+    let flipCount = 0;
+    let max = 0;
+    let i = 0;
+    let j = 0;
+
+    while (j < nums.length) {
+        if (nums[j] === 0) {
+            flipCount++;
+        }
+        if (flipCount > k) {
+            if (nums[i] === 0) {
+                flipCount--;
+            }
+            i++;
+        }
+        max = Math.max(max, j - i + 1);
+        j++;
+        console.log(`i: ${i}, j: ${j}`);
+    }
+    return max;
+};

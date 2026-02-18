@@ -51,3 +51,103 @@ COMPLEXITY ANALYSIS:
 - Space complexity: O(1) or O(2), as the size of the map can be at most 2 since we only have two baskets.
 */
 
+// ==================== BRUTE FORCE APPROACH ====================
+
+class Solution {
+    // Function to calculate maximum fruits collected
+    // with at most two distinct types from any start point
+    totalFruit(fruits) {
+
+        // Variable to store the maximum fruits collected
+        let maxFruits = 0;
+
+        // Loop over each possible starting point
+        for (let start = 0; start < fruits.length; start++) {
+
+            // Map to count fruit types in basket
+            const basket = new Map();
+
+            // Variable to count number of fruits collected
+            let currentCount = 0;
+
+            // Traverse from start to end
+            for (let end = start; end < fruits.length; end++) {
+
+                // Add fruit to basket
+                basket.set(fruits[end], (basket.get(fruits[end]) || 0) + 1);
+
+                // If more than 2 fruit types, break
+                if (basket.size > 2) {
+                    break;
+                }
+
+                // Increase fruit count
+                currentCount++;
+            }
+
+            // Update maximum fruits collected
+            maxFruits = Math.max(maxFruits, currentCount);
+        }
+
+        // Return result
+        return maxFruits;
+    }
+}
+
+// Driver code
+const obj = new Solution();
+const fruits = [1, 2, 1];
+console.log(obj.totalFruit(fruits)); // Output: 3
+
+// Time Complexity: O(N^2)
+// Space Complexity: O(1)
+
+// ==================== OPTIMIZED APPROACH ====================
+
+class Solution {
+    // Function to find the maximum number of fruits we can collect
+    // with at most two types of fruits in the baskets.
+    totalFruit(fruits) {
+
+        // Initialize tracking variables
+        let maxlen = 0;
+        let lastFruit = -1, secondLastFruit = -1;
+        let currCount = 0, lastFruitStreak = 0;
+
+        // Traverse the fruits array
+        for (let fruit of fruits) {
+
+            // If current fruit matches the last two types
+            if (fruit === lastFruit || fruit === secondLastFruit) {
+                currCount++;
+                //
+            } else {
+                // Reset to streak size
+                currCount = lastFruitStreak + 1;
+            }
+
+            // Update streak and fruit types
+            if (fruit === lastFruit) {
+                lastFruitStreak++;
+                // If it's a new fruit, update the second last and last fruit
+            } else {
+                lastFruitStreak = 1;
+                secondLastFruit = lastFruit;
+                lastFruit = fruit;
+            }
+
+            // Update max length
+            maxlen = Math.max(maxlen, currCount);
+        }
+
+        return maxlen;
+    }
+}
+
+// Driver code
+const sol = new Solution();
+const fruits = [1, 2, 1, 2, 3];
+console.log(sol.totalFruit(fruits));
+
+// Time Complexity: O(N)
+// Space Complexity: O(1)
