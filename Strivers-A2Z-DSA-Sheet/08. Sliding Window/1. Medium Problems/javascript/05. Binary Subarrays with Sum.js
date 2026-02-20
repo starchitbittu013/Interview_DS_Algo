@@ -29,7 +29,7 @@ CODE:*/
  * @param {number} goal
  * @return {number}
  */
-var numSubarraysWithSum = function(nums, goal) {
+function numSubarraysWithSum(nums, goal) {
     const mp = new Map();
     let prefSum = 0, cnt = 0;
     for (let i = 0; i < nums.length; i++) {
@@ -41,7 +41,7 @@ var numSubarraysWithSum = function(nums, goal) {
         mp.set(prefSum, (mp.get(prefSum) || 0) + 1);
     }
     return cnt;
-};
+}
 
 /*
 COMPLEXITY ANALYSIS:
@@ -50,4 +50,140 @@ COMPLEXITY ANALYSIS:
     - we can reduce the space complexity to O(1) if we use this countOfSubarrays with atmost sum = k - atmost sum = k-1
     - which will return in countofSubarrays with sum exactly K, but this won't work if array has -ve elements
 */
+
+
+// ==================== BRUTE FORCE APPROACH ====================
+/**
+ * Brute Force Approach:
+ * - Generate all possible subarrays using two nested loops
+ * - For each subarray, calculate the sum and check if it equals goal
+ * - Count all subarrays where sum equals goal
+ *
+ * Time Complexity: O(N^2) - Two nested loops to generate all subarrays
+ * Space Complexity: O(1) - Only using variables for counting
+ */
+
+function numSubarraysWithSumBruteForce(nums, goal) {
+    let count = 0;
+    const n = nums.length;
+
+    // Outer loop: starting index of subarray
+    for (let i = 0; i < n; i++) {
+        let sum = 0;
+
+        // Inner loop: ending index of subarray
+        // Calculate sum as we extend the subarray (avoids O(N^3))
+        for (let j = i; j < n; j++) {
+            sum += nums[j];  // Add current element to running sum
+
+            // If sum equals goal, we found a valid subarray
+            if (sum === goal) {
+                count++;
+            }
+        }
+    }
+
+    return count;
+}
+
+
+// ==================== BETTER APPROACH (Prefix Sum with HashMap) ====================
+/**
+ * Better Approach using Prefix Sum + HashMap:
+ * - Use prefix sum to calculate subarray sums efficiently
+ * - If prefixSum[j] - prefixSum[i] = goal, then subarray (i+1, j) has sum = goal
+ * - Store frequency of each prefix sum in a HashMap
+ * - For each prefix sum, check if (prefixSum - goal) exists in map
+ *
+ * Key Insight: If current prefix sum is 'prefSum' and we need sum = goal,
+ * we look for how many times (prefSum - goal) appeared before.
+ *
+ * Time Complexity: O(N) - Single pass through the array
+ * Space Complexity: O(N) - HashMap to store prefix sums
+ */
+
+function numSubarraysWithSumBetter(nums, goal) {
+    const mp = new Map();
+    let prefSum = 0, cnt = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        prefSum += nums[i];  // Update prefix sum
+
+        // If prefix sum equals goal, subarray from index 0 to i has sum = goal
+        if (prefSum === goal) {
+            cnt++;
+        }
+
+        // Check if (prefSum - goal) exists in map
+        // If yes, those many subarrays ending at i have sum = goal
+        if (mp.has(prefSum - goal)) {
+            cnt += mp.get(prefSum - goal);
+        }
+
+        // Store current prefix sum frequency in map
+        mp.set(prefSum, (mp.get(prefSum) || 0) + 1);
+    }
+
+    return cnt;
+}
+
+
+// ==================== OPTIMAL APPROACH (Sliding Window) ====================
+/**
+ * Optimal Approach using Sliding Window:
+ * - Key Trick: count(sum == goal) = count(sum <= goal) - count(sum <= goal-1)
+ * - Use sliding window to count subarrays with sum <= k
+ * - This works because array contains only 0s and 1s (non-negative)
+ *
+ * Why this works:
+ * - Subarrays with sum exactly K = (Subarrays with sum at most K) - (Subarrays with sum at most K-1)
+ * - Sliding window can efficiently count "at most K" subarrays
+ *
+ * Time Complexity: O(N) - Two passes but each element visited at most twice
+ * Space Complexity: O(1) - Only using pointers and variables
+ */
+
+// Helper function: Count subarrays with sum <= goal
+function countSubarraysWithSumAtMost(nums, goal) {
+    // Edge case: if goal is negative, no valid subarrays exist
+    if (goal < 0) return 0;
+
+    let count = 0;
+    let sum = 0;
+    let left = 0;
+
+    for (let right = 0; right < nums.length; right++) {
+        sum += nums[right];  // Expand window by adding right element
+
+        // Shrink window from left while sum exceeds goal
+        while (sum > goal) {
+            sum -= nums[left];
+            left++;
+        }
+
+        // All subarrays ending at 'right' with start from 'left' to 'right' are valid
+        // Number of such subarrays = (right - left + 1)
+        count += (right - left + 1);
+    }
+
+    return count;
+}
+
+function numSubarraysWithSumOptimal(nums, goal) {
+    // count(sum == goal) = count(sum <= goal) - count(sum <= goal-1)
+    return countSubarraysWithSumAtMost(nums, goal) - countSubarraysWithSumAtMost(nums, goal - 1);
+}
+
+/*
+SUMMARY:
+┌─────────────────┬──────────────────┬──────────────────┐
+│ Approach        │ Time Complexity  │ Space Complexity │
+├─────────────────┼──────────────────┼──────────────────┤
+│ Brute Force     │ O(N^2)           │ O(1)             │
+│ Better (HashMap)│ O(N)             │ O(N)             │
+│ Optimal (Sliding│ O(N)             │ O(1)             │
+│ Window)         │                  │                  │
+└─────────────────┴──────────────────┴──────────────────┘
+*/
+
 
